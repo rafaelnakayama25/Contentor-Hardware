@@ -59,7 +59,7 @@ int LoRa_SendCallBack(uint32_t *ack)
 //Public
 
 //serve para enviar um pacote de dados via LoRa 5 vezes, com um intervalo de 10 ms entre cada envio. Usado para enviar um ack de confirmação para a outra parte na comunicação.
-void LoRa_RecieveCallBack(uint32_t *ack)
+void LoRa_ReceiveCallBack(uint32_t *ack)
 {
     uint8_t i;
     for(i = 0; i < 5; i++)
@@ -108,22 +108,20 @@ uint8_t LoRa_Send(ID_Data *data,char *payload)
 //Recepção de dados e verificação da integridade do pacote recebido.
 uint32_t LoRa_Receive(ID_Data *id_data, String *payload)
 {
-    static String received_ant = "";
-    bool verify = false;
-    int i = 0;
-    int packetSize = LoRa.parsePacket();
+    static String received_ant = ""; // Variável estática para armazenar o último pacote recebido
+    int packetSize = LoRa.parsePacket(); //Verifica se um novo pacote foi recebido
     if (packetSize)
     {
-        String received = "";
-        while (LoRa.available())
+        String received = ""; // String temporária para armazenar o pacote recebido
+        while (LoRa.available()) // Enquanto houver dados disponíveis para leitura
         {
-            received += (char)LoRa.read();
+            received += (char)LoRa.read(); // Lê os dados recebidos e os adiciona à string 'received'
         }
-        *payload = received;
+        *payload = received; // Atualiza o ponteiro 'payload' com os dados recebidos
     }
-    if(received_ant == *payload)
-        return 0;
+    if(received_ant == *payload) // Verifica se os dados recebidos são iguais aos dados recebidos anteriormente
+        return 0; // Se forem iguais, retorna 0 (indicando dados duplicados)
 
-    received_ant = *payload;
-    return simpleChecksum(payload->c_str());
+    received_ant = *payload; // Atualiza 'received_ant' com os novos dados recebidos
+    return simpleChecksum(payload->c_str()); // Calcula e retorna o checksum simples dos dados recebidos
 }

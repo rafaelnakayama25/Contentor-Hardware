@@ -9,8 +9,6 @@ typedef enum {
     DATA_PROCESSING,
 } machine_state_t;
 
-
-
 void initializeLoraControl(ID_Data* id_data, Data* data, ShifterRegister* shifter) 
 {
     uint64_t mac = ESP.getEfuseMac();
@@ -82,13 +80,13 @@ void task_lora_control(void *pvParameters)
                 if(!received.isEmpty())
                 {
                     Serial.println(received);
-                    state = VERIFY_RECIVE;
+                    state = VERIFY_RECEIVE;
                     break;
                 }
                 state = VERIFY_QUEUE;
                 break;
 
-            case VERIFY_RECIVE:
+            case VERIFY_RECEIVE:
                 handleVerifyReceive(&received, &id_data, &state);
                 break;
 
@@ -103,7 +101,7 @@ void task_lora_control(void *pvParameters)
                 break;
 
             case DATA_PROCESSING:
-                dataProcessing(&sensor.data_sensor, &sensor.data_liquid, &id_data, &p_dados);
+                dataProcessing(&sensor.data_sensor, &id_data, &p_dados);
                 state = LORA_SEND;
                 break;
 

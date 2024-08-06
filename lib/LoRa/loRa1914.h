@@ -39,7 +39,7 @@ uint8_t LoRa_Send(ID_Data *id_data, char *payload); //Envia um payload via LoRa
 
 uint32_t LoRa_Receive(ID_Data *id_data, String *payload); //Recebe um payload via LoRa
 
-void LoRa_RecieveCallBack(uint32_t *ack); //Envia um ack de confirmação para a outra parte na comunicação
+void LoRa_ReceiveCallBack(uint32_t *ack); //Envia um ack de confirmação para a outra parte na comunicação
 
 
 
